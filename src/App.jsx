@@ -84,7 +84,7 @@ function App() {
         {isOpen ? (
           <div className="grid grid-cols-12 border-blue-600 border md:mx-6">
             <div className="col-span-12">
-              <ProjectHeader status={status} onclick={statusHandler} />
+              <ProjectHeader status={status} onStatusHandler={statusHandler} />
             </div>
             <div className="col-span-12">
               <ProjectTable allProject={allProject} status={status} />

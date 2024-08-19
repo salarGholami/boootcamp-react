@@ -1,4 +1,8 @@
-function ProjectHeader({ onStatus }) {
+// import FilterStatus from "./FilterStatus";
+
+import FilterStatus from "./FilterStatus";
+
+function ProjectHeader({ onStatusHandler, status }) {
   return (
     <div className="grid grid-cols-12 font-bold p-5">
       <div className="col-span-12 md:col-span-3 lg:col-span-5 my-1 md:my-0">
@@ -8,31 +12,10 @@ function ProjectHeader({ onStatus }) {
       </div>
       <div className="col-span-12 md:col-span-9 lg:col-span-7">
         <div className="flex justify-between items-center lg:gap-x-5">
-          <div className="flex justify-center items-center">
-            <p className="ml-2 text-[10px] md:text-xs lg:text-sm dark:text-gray-400">
-              وضعیت
-            </p>
-            <div className="flex bg-white md:gap-x-2 p-1 rounded-md dark:bg-gray-800 dark:text-gray-400">
-              <button
-                className="bg-blue-500 text-[10px] md:text-xs lg:text-sm text-white px-3 rounded-md"
-                onClick={onStatus}
-              >
-                همه
-              </button>
-              <button
-                className="px-3 text-[10px] md:text-xs lg:text-sm "
-                onClick={onStatus}
-              >
-                باز
-              </button>
-              <button
-                className="px-3 text-[10px] md:text-xs lg:text-sm"
-                onClick={onStatus}
-              >
-                بسته
-              </button>
-            </div>
-          </div>
+          <FilterStatus
+            onStatusHandler={onStatusHandler}
+            filterStatus={status}
+          />
           <div className="">
             <select
               className="p-1 rounded-md text-[10px] md:text-xs lg:text-sm dark:bg-gray-800 dark:text-gray-400"
@@ -49,7 +32,7 @@ function ProjectHeader({ onStatus }) {
               name=""
               id=""
             >
-              <option value="">دسته بندی(همه)</option>
+              <option value="">دسته بندی (همه)</option>
             </select>
           </div>
         </div>
