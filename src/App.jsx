@@ -74,7 +74,8 @@ function App() {
   const [isOpen, setIsopen] = useState(false);
   const [allProject, setAllProject] = useState(projects);
   const [status, setStatus] = useState("all");
-  const [sort, setSort] = useState(null); // null: بدون مرتب‌سازی، "asc": صعودی، "desc": نزولی
+  const [sort, setSort] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState([]);
 
   const statusHandler = (item) => {
     setStatus(item);
@@ -91,6 +92,13 @@ function App() {
       default:
         return setAllProject(projects);
     }
+  };
+
+  const categoryHandler = (category) => {
+    const filterCategory = projects.filter(
+      (item) => item.category.englishTitle === category
+    );
+    setSelectedCategory(filterCategory);
   };
 
   const sortByCreatedAt = (sortDirection) => {
@@ -144,10 +152,12 @@ function App() {
                 status={status}
                 onStatusHandler={statusHandler}
                 sortByCreatedAt={sortByCreatedAt}
+                allProject={allProject}
+                categoryHandler={categoryHandler}
               />
             </div>
             <div className="col-span-12">
-              <ProjectTable allProject={allProject} status={status} />
+              <ProjectTable allProject={selectedCategory} status={status} />
             </div>
           </div>
         ) : null}

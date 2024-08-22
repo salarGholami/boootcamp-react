@@ -21,7 +21,7 @@ function FilterStatus({ filterStatus, onStatusHandler }) {
       <p className="ml-2 text-[10px] md:text-xs lg:text-sm dark:text-gray-400">
         وضعیت
       </p>
-      <div className="flex bg-white md:gap-x-2 p-1 rounded-md dark:bg-gray-800 dark:text-gray-400">
+      <div className="flex bg-white md:gap-x-2 rounded-md dark:bg-gray-800 dark:text-gray-400">
         {status.map((item) => {
           const isActive = item.value === filterStatus;
           return (
