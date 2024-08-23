@@ -74,8 +74,8 @@ function App() {
   const [isOpen, setIsopen] = useState(false);
   const [allProject, setAllProject] = useState(projects);
   const [status, setStatus] = useState("all");
-  const [sort, setSort] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [sort, setSort] = useState("asc");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   const statusHandler = (item) => {
     setStatus(item);
@@ -95,33 +95,27 @@ function App() {
   };
 
   const categoryHandler = (category) => {
-    const filterCategory = projects.filter(
-      (item) => item.category.englishTitle === category
-    );
-    setSelectedCategory(filterCategory);
+    setSelectedCategory(category);
   };
 
   const sortByCreatedAt = (sortDirection) => {
-    // کپی کردن آرایه پروژه‌ها برای جلوگیری از تغییر مستقیم state
     const sortedProjects = [...allProject];
 
-    // مرتب‌سازی بر اساس createdAt
     sortedProjects.sort((a, b) => {
       const dateA = new Date(a.deadline);
       const dateB = new Date(b.deadline);
 
       if (sortDirection === "asc") {
-        return dateA - dateB; // مرتب‌سازی صعودی بر اساس زمان ایجاد
+        return dateA - dateB;
       } else if (sortDirection === "desc") {
-        return dateB - dateA; // مرتب‌سازی نزولی بر اساس زمان ایجاد
+        return dateB - dateA;
       } else {
-        return 0; // بدون تغییر
+        return 0;
       }
     });
 
-    // به روز رسانی state پروژه‌های مرتب شده
     setAllProject(sortedProjects);
-    // تنظیم جهت مرتب‌سازی
+
     setSort(sortDirection);
   };
 
@@ -151,13 +145,18 @@ function App() {
               <ProjectHeader
                 status={status}
                 onStatusHandler={statusHandler}
+                sort={sort}
                 sortByCreatedAt={sortByCreatedAt}
                 allProject={allProject}
                 categoryHandler={categoryHandler}
+                selectedCategory={selectedCategory}
               />
             </div>
             <div className="col-span-12">
-              <ProjectTable allProject={selectedCategory} status={status} />
+              <ProjectTable
+                allProject={allProject}
+                selectedCategory={selectedCategory}
+              />
             </div>
           </div>
         ) : null}

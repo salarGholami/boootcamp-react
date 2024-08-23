@@ -1,4 +1,11 @@
-function ProjectTable({ allProject }) {
+function ProjectTable({ allProject, selectedCategory }) {
+  const filterProjects = allProject.filter((project) => {
+    return (
+      selectedCategory === "all" ||
+      project.category.englishTitle === selectedCategory
+    );
+  });
+
   return (
     <>
       {allProject.length === 0 ? (
@@ -16,7 +23,7 @@ function ProjectTable({ allProject }) {
                 <th className="px-6 py-3 font-bold">عملیات</th>
               </tr>
             </thead>
-            {allProject.map((item) => (
+            {filterProjects.map((item) => (
               <Project key={item._id} item={item} />
             ))}
           </table>

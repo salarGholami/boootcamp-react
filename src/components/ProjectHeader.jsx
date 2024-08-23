@@ -6,27 +6,29 @@ function ProjectHeader({
   sortByCreatedAt,
   allProject,
   categoryHandler,
+  sort,
+  selectedCategory,
 }) {
-  const allCategory = allProject.map((item) => {
+  const newCategory = allProject.map((item) => {
     return {
       label: item.category.title,
       value: item.category.englishTitle,
     };
   });
 
+  const allCategory = [
+    { label: " دسته بندی ( همه )", value: "all" },
+    ...newCategory,
+  ];
+
   const allSort = [
     {
       id: 1,
-      label: "مرتب سازی ( همه )",
-      value: "",
-    },
-    {
-      id: 2,
       label: "مرتب سازی ( قدیمی ترین )",
       value: "asc",
     },
     {
-      id: 3,
+      id: 2,
       label: "مرتب سازی ( جدید ترین )",
       value: "desc",
     },
@@ -46,29 +48,18 @@ function ProjectHeader({
             filterStatus={status}
           />
           <div className="">
-            <select
-              className="p-1 rounded-md text-[10px] md:text-xs lg:text-sm dark:bg-gray-800 dark:text-gray-400"
-              onChange={(e) => sortByCreatedAt(e.target.value)}
-            >
-              {allSort.map((item) => (
-                <option key={item.id} value={item.value}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+            <SortByDate
+              value={sort}
+              onChange={sortByCreatedAt}
+              option={allSort}
+            />
           </div>
           <div className="">
-            <select
-              className="p-1 rounded-md text-[10px] md:text-xs lg:text-sm  dark:bg-gray-800 dark:text-gray-400"
-              onChange={(e) => categoryHandler(e.target.value)}
-            >
-              <option value="">دسته بندی (همه)</option>
-              {allCategory.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+            <SortByCategories
+              value={selectedCategory}
+              onChange={categoryHandler}
+              option={allCategory}
+            />
           </div>
         </div>
       </div>
@@ -77,3 +68,35 @@ function ProjectHeader({
 }
 
 export default ProjectHeader;
+
+function SortByDate({ value, onChange, option }) {
+  return (
+    <select
+      className="p-1 rounded-md text-[10px] md:text-xs lg:text-sm dark:bg-gray-800 dark:text-gray-400"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    >
+      {option.map((item) => (
+        <option key={item.id} value={item.value}>
+          {item.label}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function SortByCategories({ value, onChange, option }) {
+  return (
+    <select
+      className="p-1 rounded-md text-[10px] md:text-xs lg:text-sm  dark:bg-gray-800 dark:text-gray-400"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    >
+      {option.map((item) => (
+        <option key={item.value} value={item.value}>
+          {item.label}
+        </option>
+      ))}
+    </select>
+  );
+}
