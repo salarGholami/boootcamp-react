@@ -1,127 +1,46 @@
 import { useState } from "react";
 import "./App.css";
-import ProjectHeader from "./components/ProjectHeader";
-import ProjectTable from "./components/ProjectTable";
-
-const projects = [
-  {
-    _id: 1,
-    title: "طراحی اپلیکیشن سفر آنلاین",
-    description: "طراحی رابط کاربری و تجربه کاربری اپلیکیشن سفر آنلاین",
-    status: "CLOSED",
-    category: {
-      id: 1,
-      title: "طراحی UI/UX",
-      englishTitle: "design-ui/ux",
-    },
-    budget: 10000,
-    tags: ["Ui/UX", "Figma"],
-    deadline: "2023-12-23T12:55:48.740Z",
-    createdAt: "2023-10-23T18:18:55.636Z",
-    updatedAt: "2024-06-02T13:37:48.468Z",
-  },
-  {
-    _id: 2,
-    title: "توسعه سایت فروشگاهی",
-    description: "یک سایت فروشگاهی کامل با پنل ادمین",
-    status: "OPEN",
-    category: {
-      id: 2,
-      title: "برنامه نویسی وب",
-      englishTitle: "web development",
-    },
-    budget: 50000,
-    tags: ["React", "Nodejs", "online shop"],
-    deadline: "2023-12-23T12:55:48.740Z",
-    createdAt: "2023-10-23T18:18:55.636Z",
-    updatedAt: "2024-06-02T13:37:48.468Z",
-  },
-  {
-    _id: 3,
-    title: "توسعه گرافیک سایت",
-    description: "یک سایت فروشگاهی کامل با پنل ادمین",
-    status: "OPEN",
-    category: {
-      id: 3,
-      title: "گرافیست",
-      englishTitle: "graphic",
-    },
-    budget: 3000,
-    tags: ["React", "Nodejs", "online shop"],
-    deadline: "2023-11-03T12:55:48.610Z",
-    createdAt: "2023-10-23T18:18:20.636Z",
-    updatedAt: "2024-06-02T13:37:48.468Z",
-  },
-  {
-    _id: 4,
-    title: "توسعه اندروید",
-    description: "یک سایت فروشگاهی کامل با پنل ادمین",
-    status: "CLOSED",
-    category: {
-      id: 4,
-      title: "برنامه نویسی اندروید",
-      englishTitle: "Android development",
-    },
-    budget: 30000,
-    tags: ["React", "Nodejs", "online shop"],
-    deadline: "2023-02-23T12:33:48.740Z",
-    createdAt: "2023-05-23T18:18:11.636Z",
-    updatedAt: "2024-06-02T13:37:48.468Z",
-  },
-];
+import ProjectHeader from "./features/projects/ProjectHeader";
+import ProjectTable from "./features/projects/ProjectTable";
+import { projects } from "./data/project";
 
 function App() {
   const [isOpen, setIsopen] = useState(false);
-  const [allProject, setAllProject] = useState(projects);
-  const [status, setStatus] = useState("all");
-  const [sort, setSort] = useState("asc");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sort, setSort] = useState("created_desc");
+  const [category, setCategory] = useState("ALL");
+  const [status, setStatus] = useState("ALL");
 
-  const statusHandler = (item) => {
-    setStatus(item);
-    switch (item) {
-      case "all": {
-        return setAllProject(projects);
-      }
-      case "open": {
-        return setAllProject(projects.filter((i) => i.status === "OPEN"));
-      }
-      case "closed": {
-        return setAllProject(projects.filter((i) => i.status === "CLOSED"));
-      }
-      default:
-        return setAllProject(projects);
+  const sortCallback = (a, b) => {
+    switch (sort) {
+      case "created_desc":
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case "created_asc":
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      case "deadline_desc":
+        return new Date(b.deadline).getTime() - new Date(a.deadline).getTime();
+      case "deadline_asc":
+        return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+      case "budget_desc":
+        return b.budget - a.budget;
+      case "budget_asc":
+        return a.budget - b.budget;
     }
   };
 
-  const categoryHandler = (category) => {
-    setSelectedCategory(category);
-  };
-
-  const sortByCreatedAt = (sortDirection) => {
-    const sortedProjects = [...allProject];
-
-    sortedProjects.sort((a, b) => {
-      const dateA = new Date(a.deadline);
-      const dateB = new Date(b.deadline);
-
-      if (sortDirection === "asc") {
-        return dateA - dateB;
-      } else if (sortDirection === "desc") {
-        return dateB - dateA;
-      } else {
-        return 0;
-      }
-    });
-
-    setAllProject(sortedProjects);
-
-    setSort(sortDirection);
-  };
+  const filteredProject = projects
+    .filter((p) => (status === "ALL" ? true : p.status === status))
+    .filter((p) =>
+      category === "ALL" ? true : p.category.englishTitle === category
+    )
+    .sort(sortCallback);
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 min-h-screen">
-      <div className=" container mx-auto py-40">
+      <div className=" container mx-auto py-36">
         {!isOpen ? (
           <div className="grid grid-cols-12">
             <div className="col-span-12">
@@ -144,19 +63,15 @@ function App() {
             <div className="col-span-12">
               <ProjectHeader
                 status={status}
-                onStatusHandler={statusHandler}
+                onChangeStatus={(value) => setStatus(value)}
                 sort={sort}
-                sortByCreatedAt={sortByCreatedAt}
-                allProject={allProject}
-                categoryHandler={categoryHandler}
-                selectedCategory={selectedCategory}
+                onChangeSort={(e) => setSort(e.target.value)}
+                category={category}
+                onChangeCategory={(e) => setCategory(e.target.value)}
               />
             </div>
             <div className="col-span-12">
-              <ProjectTable
-                allProject={allProject}
-                selectedCategory={selectedCategory}
-              />
+              <ProjectTable filteredProject={filteredProject} />
             </div>
           </div>
         ) : null}
